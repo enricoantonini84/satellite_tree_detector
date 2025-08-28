@@ -203,12 +203,12 @@ If you use this software, please consider citing the following libraries and too
 
 # Satellite tree detector (Italiano)
 
-Collezione di script Python per analizzare tessere di mappe satellitari e generare file GeoJSON con le posizioni degli alberi rilevati.
+Collezione di script Python per analizzare tiles di mappe satellitari e generare file GeoJSON con le posizioni degli alberi rilevati.
 Questo fa parte di un progetto realizzato per la mia laurea triennale in informatica presso UniVr.
 
 ## Descrizione
 
-Questo repository fornisce strumenti per manipolare e processare tessere di mappe satellitari scaricate da fornitori esterni, finalizzati a facilitare compiti di rilevamento (ad esempio, alberi/vegetazione usando YOLO o modelli simili) e generare output georeferenziati.
+Questo repository fornisce strumenti per manipolare e processare tiles di mappe satellitari scaricate da fornitori esterni, finalizzati a facilitare compiti di rilevamento (ad esempio, alberi/vegetazione usando YOLO o modelli simili) e generare output georeferenziati.
 
 ## Requisiti
 
@@ -219,32 +219,32 @@ Tutte le dipendenze sono elencate in `requirements.txt`.
 
 ### Cartella `tiles/`
 
-Script per manipolazione e processamento di tessere satellitari:
+Script per manipolazione e processamento di tiles satellitari:
 
 - **[`merge_tiles.py`](tiles/merge_tiles.py)**
-  Unisce tessere da una cartella (nominate in formato slippy: `tile_[latitude]_[longitude]_z[zoom].jpg`) in un singolo file GeoTIFF. Supporta immagini RGB (JPG/PNG) e calcola automaticamente i confini geografici dalle coordinate delle tessere. Le funzionalità includono:
-  - Analisi dei nomi file delle tessere con informazioni lat/lon/zoom
+  Unisce tiles da una cartella (nominate in formato slippy: `tile_[latitude]_[longitude]_z[zoom].jpg`) in un singolo file GeoTIFF. Supporta immagini RGB (JPG/PNG) e calcola automaticamente i confini geografici dalle coordinate delle tiles. Le funzionalità includono:
+  - Analisi dei nomi file delle tiles con informazioni lat/lon/zoom
   - Conversione delle coordinate da lat/lon al formato mappa slippy
   - Calcolo dei confini geografici per un georeferenziamento corretto
   - Generazione di GeoTIFF compresso con sistema di coordinate WGS84
-  - Gestione di collezioni miste di tessere e validazione dei livelli di zoom
+  - Gestione di collezioni miste di tiles e validazione dei livelli di zoom
 
 - **[`split_geotiff_tiles.py`](tiles/split_geotiff_tiles.py)**
-  Divide grandi immagini satellitari GeoTIFF in sotto-tessere più piccole di risoluzione specifica. Preserva le informazioni geospaziali per ogni tessera. Le funzionalità includono:
+  Divide grandi immagini satellitari GeoTIFF in sotto-tiles più piccole di risoluzione specifica. Preserva le informazioni geospaziali per ogni tessera. Le funzionalità includono:
   - Dimensione tessera configurabile (default 640x640 pixel)
-  - Calcolo automatico della griglia di tessere necessaria
+  - Calcolo automatico della griglia di tiles necessaria
   - Preservazione dei metadati GeoTIFF originali e del sistema di coordinate
-  - Gestione delle tessere di bordo che non si adattano alle dimensioni standard
+  - Gestione delle tiles di bordo che non si adattano alle dimensioni standard
   - Generazione di output compresso con compressione LZW
 
 - **[`align_geotiff.py`](tiles/align_geotiff.py)**
-  Reallinea (trasla) tessere GeoTIFF dalle coordinate attuali alle coordinate target. Utile per correggere immagini satellitari disallineate. Le funzionalità includono:
+  Reallinea (trasla) tiles GeoTIFF dalle coordinate attuali alle coordinate target. Utile per correggere immagini satellitari disallineate. Le funzionalità includono:
   - Calcolo degli offset lat/lon tra posizioni attuali e target
   - Applicazione di trasformazione affine per preservare i dati pixel
   - Mantenimento della qualità dell'immagine originale e dei metadati
   - Supporto per qualsiasi sistema di riferimento delle coordinate
 
-> **Flusso di lavoro di esempio**: Scarica tessere satellitari a 512x512px → unisci con [`merge_tiles.py`](tiles/merge_tiles.py) → dividi con [`split_geotiff_tiles.py`](tiles/split_geotiff_tiles.py) a 640x640px per addestramento YOLO, preservando la definizione dell'immagine.
+> **Flusso di lavoro di esempio**: Scarica tiles satellitari a 512x512px → unisci con [`merge_tiles.py`](tiles/merge_tiles.py) → dividi con [`split_geotiff_tiles.py`](tiles/split_geotiff_tiles.py) a 640x640px per addestramento YOLO, preservando la definizione dell'immagine.
 
 ### Cartella `yolo/`
 
@@ -302,8 +302,8 @@ Per maggiori informazioni, visita: https://www.gnu.org/licenses/agpl-3.0.html
 - **[`inference_pipeline.py`](inference_pipeline.py)**
   Pipeline completa end-to-end per rilevamento alberi su immagini satellitari. Le funzionalità includono:
   - Supporto per modelli sia YOLO che DetecTree2
-  - Processamento automatico di immagini singole, cartelle di tessere, o grandi file GeoTIFF
-  - Divisione in tessere per immagini grandi con dimensione tessera configurabile
+  - Processamento automatico di immagini singole, cartelle di tiles, o grandi file GeoTIFF
+  - Divisione in tiles per immagini grandi con dimensione tessera configurabile
   - Processamento batch con tracciamento progresso
   - Generazione automatica GeoJSON con trasformazione coordinate appropriata
   - Output GeoTIFF annotato unito
@@ -337,7 +337,7 @@ Per processamento end-to-end, usa lo script [`inference_pipeline.py`](inference_
 # Processa un GeoTIFF grande con DetecTree2
 python inference_pipeline.py --input large_image.tif --model detectree2 --model-path path/to/model.pth --output results
 
-# Processa una cartella di tessere con YOLO
+# Processa una cartella di tiles con YOLO
 python inference_pipeline.py --input tile_folder/ --model yolo --model-path path/to/model.pt --output results
 
 # Processa con parametri personalizzati
@@ -345,8 +345,8 @@ python inference_pipeline.py --input image.tif --model detectree2 --model-path m
 ```
 
 La pipeline gestisce automaticamente:
-- Divisione in tessere per immagini grandi
-- Rilevamento batch su tutte le tessere
+- Divisione in tiles per immagini grandi
+- Rilevamento batch su tutte le tiles
 - Generazione GeoJSON con trasformazione coordinate appropriata
 - Creazione GeoTIFF annotato unito
 - Statistiche riassuntive e reportistica errori
